@@ -3,10 +3,6 @@
 
 <!-- [[[cog
 import cog
-import os
-
-# Получаем путь к файлу
-relay_readme = os.path.join(os.path.dirname(__file__), "relay/docs/README.md")
-cog.out(open(relay_readme).read())
+cog.out(open("/src/devices/relay/docs/README.md").read())
 ]]] -->
 <!-- [[[end]]] -->
