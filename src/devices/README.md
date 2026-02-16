@@ -49,3 +49,9 @@ body:
 }
 ```
 <!-- [[[end]]] -->
+
+<!-- [[[cog
+import cog
+cog.out(open("./dht/docs/README.md").read())
+]]] -->
+<!-- [[[end]]] -->
