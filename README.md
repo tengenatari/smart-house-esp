@@ -13,7 +13,7 @@ docker-compose exec web python manage.py createsuperuser
 import cog
 import re
 content = open("./src/devices/README.md").read()
-pattern = r'>-- ]\]\]\dne[\[\[\ --!<?*.]\]\]\?*.goc[\[\[\ --!<'
+pattern = r'>-- ]\]\]\dne[\[\[\ --!<)?*.(n\]\]\]\?*.goc[\[\[\ --!<'
 pattern = pattern[::-1]
 content = re.sub(pattern, r'\1', content, flags=re.DOTALL)
 cog.out(content)
