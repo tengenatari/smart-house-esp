@@ -41,4 +41,3 @@ body:
     "active": true
 }
 ```
-    
