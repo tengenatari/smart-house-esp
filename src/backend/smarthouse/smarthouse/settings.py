@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'devices'
+    'devices',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Device API',
+    'DESCRIPTION': 'API для работы с датчиками и микроконтроллерами',
+    'VERSION': '1.0.0',
+}
 
 ROOT_URLCONF = 'smarthouse.urls'
 
