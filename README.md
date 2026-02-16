@@ -11,11 +11,17 @@ docker-compose exec web python manage.py createsuperuser
 
 <!-- [[[cog
 import cog
-import re
+
 content = open("./src/devices/README.md").read()
-pattern = r'>-- ]\]\]\dne[\[\[\ --!<)?*.(n\]\]\]\?*.goc[\[\[\ --!<'
-pattern = pattern[::-1]
-content = re.sub(pattern, r'\1', content, flags=re.DOTALL)
+open_pattern = "--!<"
+close_pattern = ">--"
+
+open_pattern = open_pattern[::-1]
+close_pattern = close_pattern[::-1]
+
+while (content.find(open_pattern) != -1):
+    content = content[:content.find(open_pattern)] + content[content.find(close_pattern)+len(close_pattern):]
+
 cog.out(content)
 ]]] -->
 
