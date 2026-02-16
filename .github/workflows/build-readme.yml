@@ -3,12 +3,15 @@ name: Build READMEs
 on:
   push:
     paths:
-      - 'src/devices/**/*.md'
+      - '**.md'
       - '.github/workflows/build-readmes.yml'
   pull_request:
     paths:
-      - 'src/devices/**/*.md'
-  workflow_dispatch: # Ручной запуск
+      - '**.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-readmes:
@@ -31,9 +34,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install cogapp
     
-    - name: Build READMEs with Cog
+    - name: Build all READMEs with Cog
       run: |
+        # Генерируем devices README
         cd src/devices
+        cog -r README.md
+        
+        # Генерируем корневой README
+        cd ../..
         cog -r README.md
     
     - name: Check for changes
@@ -47,6 +55,6 @@ jobs:
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add src/devices/README.md
+        git add README.md src/devices/README.md
         git commit -m "Auto-build READMEs [skip ci]"
         git push
