@@ -10,7 +10,7 @@
 #define HEALTH_PIN 0
 #define RELAY_PIN 4
 #define SERVER "http://109.194.163.31:8751"
-#define DEVICE_ID ""
+#define DEVICE_ID "relay/1"
 #define DELAY 5000
 
 boolean STATE = false;
@@ -41,7 +41,30 @@ void connectToWiFi() {
   delay(1000);
 }
 
-void sendRelayState() {
+StaticJsonDocument<200> requestDocument() {
+  StaticJsonDocument<200> doc;
+  doc["active"] = STATE;
+  
+  return doc;
+}
+
+void processResponce(HTTPClient &http, String payload) {
+  StaticJsonDocument<200> responseDoc;
+  DeserializationError error = deserializeJson(responseDoc, payload);
+      
+  if (error) {
+    Serial.print("Failed to parse JSON response: ");
+    Serial.println(error.c_str());
+    http.end();
+    return;
+  }
+
+  STATE = responseDoc["active"];
+  SUCCESS = true;
+  http.end();
+}
+
+void sendState() {
   SUCCESS = false;
 
   Serial.print("Sending HTTP request to ");
@@ -55,53 +78,33 @@ void sendRelayState() {
   http.setTimeout(10000);
   http.addHeader("Content-Type", "application/json");
 
-  StaticJsonDocument<200> doc;
-  doc["active"] = STATE;
-  
   String requestBody;
-  serializeJson(doc, requestBody);
+  serializeJson(requestDocument(), requestBody);
   
   Serial.print("Request body: ");
   Serial.println(requestBody);
 
   int httpCode = http.POST(requestBody);
   
-  if (httpCode > 0) {
+  if (httpCode != 200) {
     Serial.printf("HTTP Response code: %d\n", httpCode);
-    
-    if (httpCode == 200) {
-      String payload = http.getString();
-      Serial.print("Response: ");
-      Serial.println(payload);
-      
-      StaticJsonDocument<200> responseDoc;
-      DeserializationError error = deserializeJson(responseDoc, payload);
-      
-      if (!error) {
-        STATE = responseDoc["active"];
-        SUCCESS = true;
-      } else {
-        Serial.print("Failed to parse JSON response: ");
-        Serial.println(error.c_str());
-      }
-    } else {
-      Serial.printf("Error: Unexpected HTTP code: %d\n", httpCode);
-    }
-  } else {
-    Serial.printf("HTTP request failed, error: %s\n", http.errorToString(httpCode).c_str());
+    http.end();
+    return;
   }
-  
-  http.end();
+
+  String payload = http.getString();
+  Serial.print("Response: ");
+  Serial.println(payload);
+      
+  processResponce(http, payload);
 }
 
 void setup(void) {
   Serial.begin(115200);
-  
-  // Настраиваем пины
+
   pinMode(HEALTH_PIN, OUTPUT);
   pinMode(RELAY_PIN, OUTPUT);
   
-  // Начальное состояние реле - выключено
   digitalWrite(RELAY_PIN, LOW);
   
   connectToWiFi();
@@ -117,16 +120,14 @@ void loop(void) {
   }
 
   boolean currentRelayState = digitalRead(RELAY_PIN);
-
-  sendRelayState();
+  sendState();
   
   digitalWrite(HEALTH_PIN, SUCCESS);
   if (!SUCCESS) {
     delay(DELAY);
     return;
   }
-    
-  // Обновляем состояние реле если оно изменилось
+  
   if (STATE != currentRelayState) {
     digitalWrite(RELAY_PIN, STATE);
     Serial.printf("Relay state changed to: %s\n", STATE ? "ON" : "OFF");
