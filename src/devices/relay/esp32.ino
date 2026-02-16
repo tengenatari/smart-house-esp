@@ -48,7 +48,7 @@ StaticJsonDocument<200> requestDocument() {
   return doc;
 }
 
-void processResponce(HTTPClient &http, String payload) {
+void processResponse(HTTPClient &http, String payload) {
   StaticJsonDocument<200> responseDoc;
   DeserializationError error = deserializeJson(responseDoc, payload);
       
@@ -96,7 +96,7 @@ void sendState() {
   Serial.print("Response: ");
   Serial.println(payload);
       
-  processResponce(http, payload);
+  processResponse(http, payload);
 }
 
 void setup(void) {
