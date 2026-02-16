@@ -48,5 +48,4 @@ body:
     "active": true
 }
 ```
-    
 <!-- [[[end]]] -->
