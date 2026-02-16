@@ -18,5 +18,7 @@ pattern = pattern[::-1]
 content = re.sub(pattern, '', content, flags=re.DOTALL)
 cog.out(content)
 ]]] -->
+# Devices
+Каталог контроллеров и датчиков. Настройки и код.
 
 <!-- [[[end]]] -->
