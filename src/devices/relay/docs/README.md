@@ -4,7 +4,7 @@
 
 [Проект Wokwi](https://wokwi.com/projects/456035055362315265)
 
-![Схема цепи](./circuit.png)
+![Схема цепи](/src/devices/relay/docs/circuit.png)
 
 #### Описание
 
@@ -41,5 +41,4 @@ body:
     "active": true
 }
 ```
-    
     
