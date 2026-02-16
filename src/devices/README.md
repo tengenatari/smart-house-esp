@@ -1,3 +1,4 @@
-# devices
-Directory for controllers and sensors. Settings and Code.
+# Devices
+Каталог контроллеров и датчиков. Настройки и код.
 
+[Реле](./relay/docs/README.md)
