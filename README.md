@@ -15,10 +15,8 @@ import re
 content = open("./src/devices/README.md").read()
 pattern = r'>-- ]\]\]\dne[\[\[\ --!<?*.]\]\]\?*.goc[\[\[\ --!<'
 pattern = pattern[::-1]
-content = re.sub(pattern, '', content, flags=re.DOTALL)
+content = re.sub(pattern, r'\1', content, flags=re.DOTALL)
 cog.out(content)
 ]]] -->
-# Devices
-Каталог контроллеров и датчиков. Настройки и код.
 
 <!-- [[[end]]] -->
