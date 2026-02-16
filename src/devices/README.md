@@ -52,6 +52,6 @@ body:
 
 <!-- [[[cog
 import cog
-cog.out(open("./dht/docs/README.md").read())
+cog.out(open("./dht22/docs/README.md").read())
 ]]] -->
 <!-- [[[end]]] -->
