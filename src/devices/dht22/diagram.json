@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "author": "Zimin Andrey",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -57.6, "left": -62.36, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": 155.2,
+      "left": -63.4,
+      "rotate": 180,
+      "attrs": { "color": "green", "flip": "1" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 157.55,
+      "left": -19.2,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": -60.8,
+      "left": 72.8,
+      "attrs": { "pins": "i2c" }
+    },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -57.3, "left": -130.2, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "r1:1", "led2:A", "green", [ "v0" ] ],
+    [ "esp:GND.1", "led2:C", "black", [ "h-9.45", "v96" ] ],
+    [ "esp:0", "r1:2", "green", [ "h9.6", "v67.2" ] ],
+    [ "dht1:VCC", "esp:3V3", "red", [ "v9.6", "h48", "v-96" ] ],
+    [ "dht1:SDA", "esp:4", "orange", [ "v153.6", "h163.3", "v-124.8" ] ],
+    [ "lcd1:GND", "esp:GND.2", "black", [ "h-28.8", "v-28.8" ] ],
+    [ "lcd1:SDA", "esp:21", "magenta", [ "h-9.6", "v29" ] ],
+    [ "lcd1:SCL", "esp:22", "blue", [ "h-28.8", "v-9.3" ] ],
+    [ "dht1:GND", "esp:GND.1", "black", [ "v38.4" ] ],
+    [ "esp:3V3", "lcd1:VCC", "red", [ "h0.15", "v-38.4", "h115.2", "v48" ] ]
+  ],
+  "dependencies": {}
+}
