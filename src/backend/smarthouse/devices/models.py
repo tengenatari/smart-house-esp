@@ -1,7 +1,27 @@
 from django.utils import timezone
 
 from django.db import models
-# Create your models here.
+
+
+
+
+class Field(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class TypeDevice(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+
+    fields = models.ManyToManyField(Field)
+
+    def __str__(self):
+        return self.name
 
 
 class Device(models.Model):
@@ -13,6 +33,8 @@ class Device(models.Model):
     timeout = models.IntegerField(null=True)
     last_heartbeat = models.DateTimeField(null=True)
     is_active = models.BooleanField(default=False)
+
+    type_device = models.ForeignKey(TypeDevice, on_delete=models.PROTECT, null=True)
     def update_last_heartbeat(self) -> None:
         """
         Обновляет состояние датчика и его последний heartbeat
@@ -34,6 +56,20 @@ class Device(models.Model):
 
         self.is_active = is_active
         self.save()
+    def __str__(self):
+        return self.name
 
 
+class Message(models.Model):
 
+    id = models.AutoField(primary_key=True)
+
+    device = models.ForeignKey(Device, on_delete=models.PROTECT)
+    field = models.ForeignKey(Field, on_delete=models.PROTECT)
+
+    value = models.IntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.device.name}: {self.value}"
