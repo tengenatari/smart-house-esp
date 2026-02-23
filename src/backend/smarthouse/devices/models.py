@@ -72,3 +72,29 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{self.device.name}: {self.value} {self.field.measurement_unit}"
+
+
+class Condition(models.Model):
+
+    id = models.AutoField(primary_key=True)
+
+    device = models.ForeignKey(Device, on_delete=models.PROTECT)
+
+    condition = models.TextField()
+
+    state = models.FloatField()
+
+    related_conditions = models.ManyToManyField('self',
+        symmetrical=True,
+        blank=True,
+        related_name='related_devices')
+
+    block_related_conditions = models.BooleanField()
+
+    block_on = models.IntegerField()
+
+    last_block = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.device.name}: {self.condition} {self.state}"
+

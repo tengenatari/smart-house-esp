@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Device, Field, TypeDevice, Message
+from .models import Device, Field, TypeDevice, Message, Condition
+
 
 class DeviceAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'last_heartbeat', 'timeout', 'is_active', 'type_device']
@@ -14,3 +15,5 @@ admin.site.register(Device, DeviceAdmin)
 admin.site.register(Field, ReferenceAdmin)
 admin.site.register(TypeDevice, ReferenceAdmin)
 admin.site.register(Message, MessageAdmin)
+
+admin.site.register(Condition)
