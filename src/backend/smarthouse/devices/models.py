@@ -9,9 +9,10 @@ class Field(models.Model):
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
+    measurement_unit = models.CharField(max_length=16)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.measurement_unit})"
 
 
 class TypeDevice(models.Model):
@@ -66,10 +67,8 @@ class Message(models.Model):
 
     device = models.ForeignKey(Device, on_delete=models.PROTECT)
     field = models.ForeignKey(Field, on_delete=models.PROTECT)
-
-    value = models.IntegerField()
-
+    value = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.device.name}: {self.value}"
+        return f"{self.device.name}: {self.value} {self.field.measurement_unit}"

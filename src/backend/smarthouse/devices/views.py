@@ -38,7 +38,7 @@ def heartbeat(request, name):
         value = values.get(field.name)
         if not value:
             return JsonResponse({'message': f'Field {field} not found {value}'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        device_message = Message(device=device, field=field, value=value)
+        device_message = Message(device=device, field=field, value=value/100)
         device_message.save()
 
     device.update_last_heartbeat()
