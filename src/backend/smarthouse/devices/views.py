@@ -32,10 +32,10 @@ def heartbeat(request, name):
         return JsonResponse({'message': 'Device not found'}, status=status.HTTP_404_NOT_FOUND)
 
     fields = device.type_device.fields.all()
-
+    values = request.data.get("values")
     for field in fields:
 
-        value = request.data.get(field.name)
+        value = values.get(field.name)
         if not value:
             return JsonResponse({'message': f'Field {field} not found {value}'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         device_message = Message(device=device, field=field, value=value)
