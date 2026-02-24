@@ -26,5 +26,21 @@ services:
     depends_on:
       - db
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-smarthouse
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - db
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  grafana_data:
