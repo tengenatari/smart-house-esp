@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Device, Field, TypeDevice, Message, Condition
+from .models import Device, Field, TypeDevice, Message, Trigger, Group
 
 
 class DeviceAdmin(admin.ModelAdmin):
@@ -16,4 +16,5 @@ admin.site.register(Field, ReferenceAdmin)
 admin.site.register(TypeDevice, ReferenceAdmin)
 admin.site.register(Message, MessageAdmin)
 
-admin.site.register(Condition)
+admin.site.register(Trigger)
+admin.site.register(Group)
