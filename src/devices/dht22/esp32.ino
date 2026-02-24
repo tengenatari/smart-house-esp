@@ -12,7 +12,8 @@
 #define HEALTH_PIN 0
 #define DHT_PIN 4
 #define SERVER "http://109.194.163.31:8751"
-#define DEVICE_ID "DHT22/1"
+#define DEVICE_NAME "DHT22-1"
+#define TOKEN "abacaba"
 #define DELAY 5000
 #define DHTTYPE DHT22
 
@@ -21,8 +22,8 @@ DHT DHT(DHT_PIN, DHTTYPE);
 
 boolean SUCCESS = false;
 
-int TEMPERATURE = 0;
-int HUMIDITY = 0;
+float TEMPERATURE = 0.0;
+float HUMIDITY = 0.0;
 
 void connectToWiFi() {
   Serial.print("Connecting to WiFi ");
@@ -49,11 +50,14 @@ void connectToWiFi() {
   delay(1000);
 }
 
-StaticJsonDocument<200> requestDocument() {
-  StaticJsonDocument<200> doc;
-  doc["temperature"] = TEMPERATURE;
-  doc["humidity"] = HUMIDITY;
-  
+StaticJsonDocument<100> requestDocument() {
+  StaticJsonDocument<100> values;
+  values["temperature"] = TEMPERATURE;
+  values["humidity"] = HUMIDITY;
+
+  StaticJsonDocument<100> doc;
+  doc["token"] = TOKEN;
+  doc["values"] = values;
   return doc;
 }
 
@@ -63,15 +67,12 @@ void processResponce(HTTPClient &http, String payload) {
 }
 
 void sendState() {
-  SUCCESS = false;
-
-  Serial.print("Sending HTTP request to ");
-  Serial.print(SERVER);
-  Serial.println("/api/v1/" DEVICE_ID);
-
+  SUCCESS = false;  
   HTTPClient http;
   
-  String url = String(SERVER) + "/api/v1/" DEVICE_ID;
+  String url = String(SERVER) + "/api/v1/heartbeat/" DEVICE_NAME;
+
+  Serial.println(url);
   http.begin(url);
   http.setTimeout(10000);
   http.addHeader("Content-Type", "application/json");
@@ -98,17 +99,14 @@ void sendState() {
 }
 
 void readSensor() {
-  TEMPERATURE = int(round(DHT.readTemperature()*100));
-  HUMIDITY = int(round(DHT.readHumidity()*100));
+  TEMPERATURE = DHT.readTemperature();
+  HUMIDITY = DHT.readHumidity();
 }
 
-void printSensor(char* name, char* unit, int val) {
+void printSensor(char* name, char* unit, float val) {
   LCD.print(name);
   LCD.print(": ");
-  LCD.print(val/100);
-  LCD.print(".");
-  LCD.print(val%100/10);
-  LCD.print(val%10);
+  LCD.print(val);
   LCD.print(" ");
   LCD.print(unit);
 }
@@ -130,7 +128,6 @@ void setup(void) {
   LCD.begin(16,2);
   LCD.init();
   LCD.backlight();
-  connectToWiFi();
 }
 
 void loop(void) {
