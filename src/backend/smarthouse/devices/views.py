@@ -10,7 +10,7 @@ from rest_framework import status, serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
-from .models import Device, Field, Message, Condition
+from .models import Device, Field, Message, Trigger, Group
 from .serializers import simple_message, heartbeat
 
 from sympy import sympify, SympifyError
@@ -49,8 +49,12 @@ def heartbeat(request, name):
     message = {"message": "OK"}
 
     if conditions:
-        message["state"] = conditions[0]
+        try:
+            message["state"] = float(conditions[0])
+        except TypeError:
+            return JsonResponse({'message': 'Invalid conditions'}, status=status.HTTP_400_BAD_REQUEST)
 
+    print(message)
 
     return JsonResponse(message, status=status.HTTP_200_OK)
 
@@ -77,18 +81,39 @@ def fill_fields(device: Device, fields: list[Field], values: dict) -> None:
         device_message.save()
 
 
-def get_latest_field_values(device: Device) -> dict:
+def get_latest_field_values(group: Group) -> list:
+    """
+    Получает последние значения для всех полей всех устройств в группе
+    """
+    if not group:
+        return []
+
     latest_subquery = Message.objects.filter(
-        device=device,
+        device=OuterRef('device'),
         field=OuterRef('field')
     ).order_by('-created_at').values('value')[:1]
 
-    messages = Message.objects.filter(device=device).annotate(
+    messages = Message.objects.filter(
+        device__group=group
+    ).annotate(
         latest_value=Subquery(latest_subquery)
-    ).values('field__name', 'latest_value').distinct()
-
-    print(str(messages))
+    ).values(
+        'device__id',
+        'device__name',
+        'field__name',
+        'latest_value'
+    ).distinct()
     return messages
+
+
+def sympify_messages(expr, messages) -> float:
+    for message in messages:
+        expr = expr.replace(f'{{{message['device__name']}}}.{{{message['field__name']}}}', str(message['latest_value']))
+    try:
+        result = sympify(expr)
+    except SympifyError:
+        return 0.0
+    return result
 
 def check_conditions(device: Device) -> list[float]:
     """
@@ -100,19 +125,17 @@ def check_conditions(device: Device) -> list[float]:
     """
 
 
-    conditions = Condition.objects.filter(device=device).all()
-    latest_messages = get_latest_field_values(device)
+    triggers = device.triggers.all()
+    latest_messages = get_latest_field_values(device.group)
     triggered = []
-
-    for cond in conditions:
-        expr = cond.condition
-        for message in latest_messages:
-            expr = expr.replace(f'{{{message['field__name']}}}', str(message['latest_value']))
-        result = sympify(expr)
-        if result:
-            triggered.append(cond.state)
+    print(latest_messages)
+    for trigger in triggers:
 
 
+        if sympify_messages(trigger.condition, latest_messages):
+            triggered.append(sympify_messages(trigger.state, latest_messages))
+
+    print("OK")
     return triggered
 
 

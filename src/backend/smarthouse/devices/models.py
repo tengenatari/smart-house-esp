@@ -3,7 +3,13 @@ from django.utils import timezone
 from django.db import models
 
 
+class Group(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True)
 
+    def __str__(self):
+        return self.name
 
 class Field(models.Model):
 
@@ -31,11 +37,19 @@ class Device(models.Model):
     name = models.CharField(max_length=255, unique=True)
     token = models.CharField(max_length=255)
 
+
+
     timeout = models.IntegerField(null=True)
     last_heartbeat = models.DateTimeField(null=True)
     is_active = models.BooleanField(default=False)
 
     type_device = models.ForeignKey(TypeDevice, on_delete=models.PROTECT, null=True)
+    group = models.ForeignKey(Group, on_delete=models.PROTECT, null=True, blank=True)
+
+    triggers = models.ManyToManyField('Trigger', blank=True)
+
+    description = models.TextField(blank=True)
+
     def update_last_heartbeat(self) -> None:
         """
         Обновляет состояние датчика и его последний heartbeat
@@ -74,15 +88,14 @@ class Message(models.Model):
         return f"{self.device.name}: {self.value} {self.field.measurement_unit}"
 
 
-class Condition(models.Model):
+class Trigger(models.Model):
 
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, unique=True, null=True)
 
-    device = models.ForeignKey(Device, on_delete=models.PROTECT)
 
     condition = models.TextField()
-
-    state = models.FloatField()
+    state = models.TextField()
 
     related_conditions = models.ManyToManyField('self',
         symmetrical=True,
@@ -90,11 +103,12 @@ class Condition(models.Model):
         related_name='related_devices')
 
     block_related_conditions = models.BooleanField()
-
     block_on = models.IntegerField()
 
     last_block = models.DateTimeField(null=True, blank=True)
 
+    description = models.TextField(blank=True)
+
     def __str__(self):
-        return f"{self.device.name}: {self.condition} {self.state}"
+        return f"{self.name}"
 
