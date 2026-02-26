@@ -17,14 +17,30 @@ services:
     build: ./smarthouse
     container_name: django-smarthouse
     command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./smarthouse:/code
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/smarthouse
+    volumes:
+      - ./smarthouse:/code
     depends_on:
       - db
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-smarthouse
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - db
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  grafana_data:
