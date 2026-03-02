@@ -74,7 +74,7 @@ def fill_fields(device: Device, fields: list[Field], values: dict) -> None:
 
     for field in fields:
         value = values.get(field.name)
-        if not value:
+        if value is None:
             continue
 
         device_message = Message(device=device, field=field, value=value)
