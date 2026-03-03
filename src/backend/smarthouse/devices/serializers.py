@@ -6,6 +6,8 @@ simple_message = inline_serializer(
             name='simple_message',
             fields={
                 'simple_message': serializers.CharField(),
+                'trigger_active': serializers.BooleanField(),
+                'state': serializers.FloatField(),
             }) #сериализатор для простого сообщения
 
 heartbeat = inline_serializer(

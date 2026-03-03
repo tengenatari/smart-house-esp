@@ -30,6 +30,15 @@ from sympy import sympify, SympifyError
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def heartbeat(request, name):
+    """
+    Обработчик получения сообщений от устройств
+    :param request:
+    Объект http-запроса
+    :param name:
+    Имя устройства
+    :return:
+    Объект http-ответа
+    """
     token = request.data.get('token')
     device = Device.objects.filter(name=name, token=token).first()
 
@@ -46,32 +55,34 @@ def heartbeat(request, name):
     device.update_last_heartbeat()
     conditions = check_conditions(device)
 
-    message = {"message": "OK"}
+    message = {
+        "message": "OK",
+        "trigger_active": False,
+        "state": 0.0,
+        }
 
     if conditions:
         try:
+            message["trigger_active"] = True
             message["state"] = float(conditions[0])
         except TypeError:
             return JsonResponse({'message': 'Invalid conditions'}, status=status.HTTP_400_BAD_REQUEST)
-
-    print(message)
 
     return JsonResponse(message, status=status.HTTP_200_OK)
 
 
 def fill_fields(device: Device, fields: list[Field], values: dict) -> None:
     """
-
+    Функция заполнения полей девайса
     :param device:
     Объект девайса
     :param fields:
     Объекты полей девайса
     :param values:
-    значения параметров
+    Значения параметров
     :return:
     None
     """
-
     for field in fields:
         value = values.get(field.name)
         if value is None:
@@ -84,6 +95,10 @@ def fill_fields(device: Device, fields: list[Field], values: dict) -> None:
 def get_latest_field_values(group: Group) -> list:
     """
     Получает последние значения для всех полей всех устройств в группе
+    :param group:
+    Объект группы устройств
+    :return:
+    Список значений последних сообщений устройств
     """
     if not group:
         return []
@@ -115,6 +130,7 @@ def sympify_messages(expr, messages) -> float:
         return 0.0
     return result
 
+
 def check_conditions(device: Device) -> list[float]:
     """
     Функция проверки триггера состояний девайсов
@@ -123,19 +139,14 @@ def check_conditions(device: Device) -> list[float]:
     :return:
     Список состояний объекта, которые он должен принять.
     """
-
-
     triggers = device.triggers.all()
     latest_messages = get_latest_field_values(device.group)
+
     triggered = []
-    print(latest_messages)
     for trigger in triggers:
-
-
         if sympify_messages(trigger.condition, latest_messages):
             triggered.append(sympify_messages(trigger.state, latest_messages))
 
-    print("OK")
     return triggered
 
 
