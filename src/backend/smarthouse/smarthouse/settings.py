@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'devices',
     'drf_spectacular',
+    'django.contrib.postgres',
+    
 ]
 
 MIDDLEWARE = [
