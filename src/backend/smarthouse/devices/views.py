@@ -59,6 +59,7 @@ def heartbeat(request, name):
         "message": "OK",
         "trigger_active": False,
         "state": 0.0,
+        "metadata": device.metafield,
         }
 
     if conditions:
