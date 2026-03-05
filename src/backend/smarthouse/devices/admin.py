@@ -1,9 +1,13 @@
 from django.contrib import admin
 from .models import Device, Field, TypeDevice, Message, Trigger, Group
-
-
+from django.db import models
+from django_json_widget import widgets
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'last_heartbeat', 'timeout', 'is_active', 'type_device']
+    formfield_overrides = {
+        models.JSONField: {'widget': widgets.JSONEditorWidget(options={
+                    'mode': 'tree'
+                })}
+    }
 
 class ReferenceAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
@@ -18,3 +22,4 @@ admin.site.register(Message, MessageAdmin)
 
 admin.site.register(Trigger)
 admin.site.register(Group)
+

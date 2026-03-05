@@ -1,7 +1,8 @@
+from django.db.models import JSONField
 from django.utils import timezone
 
 from django.db import models
-from django.contrib.postgres.fields import ArrayField 
+
 
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
@@ -37,7 +38,7 @@ class Device(models.Model):
     name = models.CharField(max_length=255, unique=True)
     token = models.CharField(max_length=255)
 
-    metadata = ArrayField(models.CharField(max_length=50), blank=True, default=list)
+    metafield = JSONField(blank=True, default=dict)
 
 
     timeout = models.IntegerField(null=True)

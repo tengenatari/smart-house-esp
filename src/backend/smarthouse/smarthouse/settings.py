@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'devices',
     'drf_spectacular',
     'django.contrib.postgres',
+    'django_json_widget'
     
 ]
 
