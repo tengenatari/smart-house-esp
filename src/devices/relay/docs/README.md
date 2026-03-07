@@ -22,7 +22,7 @@
 
 HTTP POST 
 
-URL: /api/v1/имя_исполняющего_устройства/id
+URL: /api/v1/heartbeat/{device-name}
 
 Пример тела запроса:
 ```
