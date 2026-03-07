@@ -29,12 +29,15 @@ cog.out(open("./relay/docs/README.md").read())
 
 HTTP POST 
 
-URL: /api/v1/имя_исполняющего_устройства/id
+URL: /api/v1/heartbeat/{device-name}
 
-body:
+Пример тела запроса:
 ```
 {
-    "active": true
+    "token": "abacaba",
+    "values": [
+        "state": 1.0
+    ]
 }
 ```
 
@@ -42,10 +45,11 @@ body:
 
 HTTP 200 
 
-body:
+Пример тела ответа:
 ```
 {
-    "active": true
+	"trigger_active": false,
+	"state": 0.0,
 }
 ```
 <!-- [[[end]]] -->
