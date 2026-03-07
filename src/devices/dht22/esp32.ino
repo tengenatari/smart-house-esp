@@ -11,7 +11,7 @@
 
 #define HEALTH_PIN 0
 #define DHT_PIN 4
-#define SERVER "http://109.194.163.31:8751"
+#define SERVER "http://iversy.ru:8751"
 #define DEVICE_NAME "DHT22-1"
 #define TOKEN "abacaba"
 #define DELAY 5000
