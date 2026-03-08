@@ -9,8 +9,9 @@
 
 #define HEALTH_PIN 0
 #define RELAY_PIN 4
-#define SERVER "http://109.194.163.31:8751"
-#define DEVICE_ID "relay/1"
+#define SERVER "http://iversy.ru:8751"
+#define DEVICE_NAME "RELAY-1"
+#define TOKEN "abacaba"
 #define DELAY 5000
 
 boolean STATE = false;
@@ -41,15 +42,19 @@ void connectToWiFi() {
   delay(1000);
 }
 
-StaticJsonDocument<200> requestDocument() {
-  StaticJsonDocument<200> doc;
-  doc["active"] = STATE;
+StaticJsonDocument<100> requestDocument() {
+  StaticJsonDocument<100> values;
+  values["state"] = int(STATE);
   
+  StaticJsonDocument<100> doc;
+  doc["token"] = TOKEN;
+  doc["values"] = values;
+
   return doc;
 }
 
 void processResponse(HTTPClient &http, String payload) {
-  StaticJsonDocument<200> responseDoc;
+  StaticJsonDocument<100> responseDoc;
   DeserializationError error = deserializeJson(responseDoc, payload);
       
   if (error) {
@@ -59,21 +64,16 @@ void processResponse(HTTPClient &http, String payload) {
     return;
   }
 
-  STATE = responseDoc["active"];
+  STATE = responseDoc["state"];
   SUCCESS = true;
   http.end();
 }
 
 void sendState() {
   SUCCESS = false;
-
-  Serial.print("Sending HTTP request to ");
-  Serial.print(SERVER);
-  Serial.println("/api/v1/" DEVICE_ID);
-
   HTTPClient http;
   
-  String url = String(SERVER) + "/api/v1/" DEVICE_ID;
+  String url = String(SERVER) + "/api/v1/heartbeat/" + DEVICE_NAME;
   http.begin(url);
   http.setTimeout(10000);
   http.addHeader("Content-Type", "application/json");
