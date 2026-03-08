@@ -4,7 +4,7 @@
 
 [Проект Wokwi](https://wokwi.com/projects/457940559846566913)
 
-![Схема цепи](/src/devices/signaling/docs/image.png)
+![Схема цепи](/src/devices/сurtains/docs/image.png)
 
 #### Описание
 
