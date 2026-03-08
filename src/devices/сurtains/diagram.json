@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "author": "Save U",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -57.6, "left": -62.36, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 15.8,
+      "left": -316.8,
+      "attrs": { "color": "green", "label": "OPEN" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": 15.8,
+      "left": -240,
+      "attrs": { "color": "red", "label": "CLOSE" }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper1",
+      "top": -236.39,
+      "left": -229.97,
+      "attrs": { "size": "17" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -3.6,
+      "left": 61.4,
+      "attrs": { "color": "green" }
+    },
+    { "type": "wokwi-slide-switch", "id": "sw1", "top": -72.4, "left": 89.5, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "endstop_closed",
+      "top": -185.8,
+      "left": -48,
+      "attrs": { "color": "brown", "label": "END CLOSED" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "endstop_open",
+      "top": -185.8,
+      "left": 28.8,
+      "attrs": { "color": "brown", "label": "END OPEN" }
+    },
+    {
+      "type": "wokwi-bargraph",
+      "id": "bargraph1",
+      "top": 100,
+      "left": -200,
+      "attrs": { "label": "CURTAINS", "levels": "10" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "btn1:1.l", "esp:13", "green", [ "v0" ] ],
+    [ "btn1:2.l", "esp:GND.1", "black", [ "v28" ] ],
+    [ "btn2:1.l", "esp:12", "red", [ "v0" ] ],
+    [ "btn2:2.l", "esp:GND.1", "black", [ "v28" ] ],
+    [ "led1:A", "esp:2", "green", [ "v55.2", "h-57.6" ] ],
+    [ "led1:C", "esp:GND.2", "gray", [ "h-18.8", "v-67.2" ] ],
+    [ "stepper1:A+", "esp:14", "blue", [ "v0" ] ],
+    [ "stepper1:A-", "esp:27", "yellow", [ "v0" ] ],
+    [ "stepper1:B+", "esp:26", "orange", [ "v0" ] ],
+    [ "stepper1:B-", "esp:25", "green", [ "v0" ] ],
+    [ "sw1:2", "esp:GND.2", "black", [ "v9.6", "h-19.1", "v-48" ] ],
+    [ "sw1:3", "esp:15", "white", [ "v0" ] ],
+    [ "bargraph1:VCC", "esp:5V", "red", [ "v0" ] ],
+    [ "bargraph1:GND", "esp:GND.2", "black", [ "v0" ] ],
+    [ "endstop_open:1.l", "esp:17", "#8f4814", [ "v-28.8", "h105.6", "v240" ] ],
+    [ "endstop_closed:1.l", "esp:16", "#8f4814", [ "v-38.4", "h201.6", "v259.2" ] ],
+    [ "endstop_closed:2.l", "esp:GND.2", "black", [ "v19.4", "v105.6" ] ],
+    [ "endstop_open:2.l", "esp:GND.2", "black", [ "v57.8", "v67.2" ] ]
+  ],
+  "dependencies": {}
+}
