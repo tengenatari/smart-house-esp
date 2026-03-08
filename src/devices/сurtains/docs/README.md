@@ -66,9 +66,12 @@ body:
 **Формат ответов:**
 
 HTTP 200 - подтверждение получения данных 
+
+```
 {
     "message": "OK",
     "trigger_active": true,
     "state": 100.0,
     "metadata": {}
 }
+```
