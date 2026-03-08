@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "author": "Save U",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -9.6, "left": 62.44, "attrs": {} },
+    { "type": "wokwi-gas-sensor", "id": "gas1", "top": -6.9, "left": -165.8, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -1.2,
+      "left": 208.2,
+      "rotate": 90,
+      "attrs": { "color": "limegreen" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer1",
+      "top": -16.8,
+      "left": 261,
+      "attrs": { "mode": "smooth", "volume": "1.0" }
+    },
+    { "type": "wokwi-flame-sensor", "id": "flame1", "top": 81.4, "left": -208.6, "attrs": {} },
+    {
+      "type": "wokwi-ds18b20",
+      "id": "temp1",
+      "top": 171.67,
+      "left": -82.32,
+      "attrs": { "temperature": "5.2" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "gas1:VCC", "esp:3V3", "white", [ "h76.8", "v-0.9", "v-19.2" ] ],
+    [ "gas1:DOUT", "esp:12", "gold", [ "h48", "v114.9", "h28.8" ] ],
+    [ "esp:GND.2", "led1:C", "green", [ "h96" ] ],
+    [ "esp:15", "buzzer1:2", "red", [ "h202" ] ],
+    [ "esp:GND.3", "buzzer1:1", "black", [ "h124.8", "v-9.6" ] ],
+    [ "esp:GND.1", "gas1:GND", "blue", [ "h-19.05", "v-57.6", "h-38.4", "v-56.8" ] ],
+    [ "led1:A", "esp:22", "gray", [ "h-38.4", "v9.6" ] ],
+    [ "flame1:VCC", "esp:5V", "orange", [ "h19.2", "v76.8" ] ],
+    [ "flame1:DOUT", "esp:13", "#8f4814", [ "h9.6", "v19" ] ],
+    [ "temp1:GND", "esp:GND.1", "white", [ "v19.2", "h105.6", "v-96", "h38.25" ] ],
+    [ "temp1:DQ", "esp:4", "gray", [ "v38.4", "h249.6", "v-124.8" ] ],
+    [ "temp1:VCC", "esp:3V3", "black", [ "v9.6", "h96", "v-211.2" ] ]
+  ],
+  "dependencies": {}
+}
