@@ -49,8 +49,6 @@ def heartbeat(request, name):
     fields = device.type_device.fields.all()
     values = request.data.get("values")
 
-    if fields and not values:
-        return JsonResponse({'message': 'Missing values'}, status=status.HTTP_400_BAD_REQUEST)
 
     fill_fields(device, fields, values)
     device.update_last_heartbeat()
