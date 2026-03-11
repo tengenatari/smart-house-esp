@@ -1,5 +1,6 @@
 import sys
 
+
 from django.db import transaction
 from django.db.models import Max, OuterRef, Subquery
 from django.shortcuts import render
@@ -55,11 +56,21 @@ def heartbeat(request, name):
     device.update_last_heartbeat()
     conditions = check_conditions(device)
 
+    metadata = request.data.get("metadata")
+
+    if metadata is not None:
+        device.metadata = metadata
+        device.save()
+
+
+
     message = {
         "message": "OK",
         "trigger_active": False,
         "state": 0.0,
         }
+
+
 
     if conditions:
         try:
