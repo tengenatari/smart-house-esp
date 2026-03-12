@@ -1,5 +1,6 @@
 import sys
 
+
 from django.db import transaction
 from django.db.models import Max, OuterRef, Subquery
 from django.shortcuts import render
@@ -48,12 +49,18 @@ def heartbeat(request, name):
     fields = device.type_device.fields.all()
     values = request.data.get("values")
 
-    if fields and not values:
-        return JsonResponse({'message': 'Missing values'}, status=status.HTTP_400_BAD_REQUEST)
 
     fill_fields(device, fields, values)
     device.update_last_heartbeat()
     conditions = check_conditions(device)
+
+    metadata = request.data.get("metadata")
+
+    if metadata is not None:
+        device.metadata = metadata
+        device.save()
+
+
 
     message = {
         "message": "OK",
@@ -61,6 +68,8 @@ def heartbeat(request, name):
         "state": 0.0,
         "metadata": device.metafield,
         }
+
+
 
     if conditions:
         try:
