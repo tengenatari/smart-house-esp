@@ -87,15 +87,6 @@ cog.out(open("./signaling/docs/README.md").read())
  
 <!-- [[[end]]] -->
 
-
-<!-- [[[cog
-import cog
-cog.out(open("./curtains/docs/README.md").read())
-]]] -->
- 
-<!-- [[[end]]] -->
-
-
 <!-- [[[cog
 import cog
 cog.out(open("./door/docs/README.md").read())
