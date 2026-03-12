@@ -4,3 +4,4 @@
 MFRC522
 ArduinoJson
 ESP32Servo
+SdFat
