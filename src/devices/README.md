@@ -324,3 +324,9 @@ body:
 }
 ```
 <!-- [[[end]]] -->
+
+<!-- [[[cog
+import cog
+cog.out(open("./plant-watering/docs/README.md").read())
+]]] -->
+<!-- [[[end]]] -->
