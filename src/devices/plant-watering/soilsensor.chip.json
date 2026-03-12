@@ -1,0 +1,24 @@
+{
+  "name": "Soil Sensor",
+  "author": "Анастасия Зверева",
+  "pins": [
+    "GND",
+    "VCC",
+    "A0",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "controls": [
+    {
+      "id": "moisture",
+      "label": "Soil Moisture",
+      "type": "range",
+      "min": 1680,
+      "max": 3620,
+      "step": 1
+    }
+  ]
+}

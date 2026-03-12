@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "author": "Анастасия Зверева",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 18.28, "left": 112.73, "attrs": {} },
+    { "type": "wokwi-lcd1602", "id": "lcd1", "top": -8.45, "left": 262.85, "attrs": { "pins": "i2c" } },
+    { "type": "wokwi-pushbutton", "id": "btn1", "top": 178, "left": -116, "attrs": { "color": "green" } },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": -7, "left": -135, "attrs": {} },
+    { "type": "chip-soilsensor", "id": "chip2", "top": 183.42, "left": 312, "attrs": {} },
+    { "type": "wokwi-digital-input", "id": "flow1", "top": 140, "left": 290, "attrs": { "pin": "D5" } }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "lcd1:SCL", "esp:D22", "#8f4814", [ "h0" ] ],
+    [ "lcd1:SDA", "esp:D23", "blue", [ "h0" ] ],
+    [ "lcd1:GND", "esp:GND.1", "black", [ "h-20.78", "v130.63" ] ],
+    [ "esp:3V3", "lcd1:VCC", "red", [ "v0.15", "h20.28", "v-145.52" ] ],
+    [ "btn1:1.l", "esp:GND.2", "black", [] ],
+    [ "btn1:2.r", "esp:D18", "blue", [] ],
+    [ "relay1:VCC", "esp:5V", "red", [] ],
+    [ "relay1:GND", "esp:GND.3", "black", [] ],
+    [ "relay1:IN", "esp:D26", "orange", [] ],
+    [ "chip2:A0", "esp:D34", "green", [ "h0" ] ],
+    [ "chip2:VCC", "esp:3V3", "red", [ "h0" ] ],
+    [ "chip2:GND", "esp:GND.1", "black", [ "h0" ] ],
+    [ "flow1:GND", "esp:GND.1", "black", [ "h0" ] ],
+    [ "flow1:VCC", "esp:3V3", "red", [ "h0" ] ],
+    [ "flow1:IN", "esp:D5", "green", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
