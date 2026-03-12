@@ -1,0 +1,6 @@
+# Wokwi Library List
+# See https://docs.wokwi.com/guides/libraries
+
+MFRC522
+ArduinoJson
+ESP32Servo
