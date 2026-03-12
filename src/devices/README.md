@@ -79,3 +79,50 @@ URL: /api/v1/heartbeat/{device-name}
 
 HTTP 200 
 <!-- [[[end]]] -->
+
+<!-- [[[cog
+import cog
+cog.out(open("./signaling/docs/README.md").read())
+]]] -->
+ 
+<!-- [[[end]]] -->
+
+
+<!-- [[[cog
+import cog
+cog.out(open("./curtains/docs/README.md").read())
+]]] -->
+ 
+<!-- [[[end]]] -->
+
+
+<!-- [[[cog
+import cog
+cog.out(open("./door/docs/README.md").read())
+]]] -->
+ 
+<!-- [[[end]]] -->
+
+
+<!-- [[[cog
+import cog
+cog.out(open("./light/docs/README.md").read())
+]]] -->
+ 
+<!-- [[[end]]] -->
+
+
+<!-- [[[cog
+import cog
+cog.out(open("./pid/docs/README.md").read())
+]]] -->
+ 
+<!-- [[[end]]] -->
+
+
+<!-- [[[cog
+import cog
+cog.out(open("./watch/docs/README.md").read())
+]]] -->
+ 
+<!-- [[[end]]] -->
