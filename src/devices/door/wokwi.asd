@@ -4,11 +4,19 @@
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
 #include <ESP32Servo.h>
+#include <SD.h>
 
 // Pin config
 #define SS_PIN  5
 #define RST_PIN 21
 #define SERVO_PIN 14
+
+#define CD_PIN 25
+#define DO_PIN 33
+#define SCK_PIN 34
+#define DI_PIN 35
+#define CS_PIN 32
+
 
 
 

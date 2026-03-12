@@ -12,7 +12,8 @@
       "left": -525.2,
       "rotate": 180,
       "attrs": {}
-    }
+    },
+    { "type": "wokwi-microsd-card", "id": "sd1", "top": 0.23, "left": -431.93, "attrs": {} }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
@@ -25,7 +26,13 @@
     [ "esp:23", "rfid1:MOSI", "yellow", [ "h28.8", "v48" ] ],
     [ "servo1:GND", "esp:GND.1", "black", [ "h19.2", "v-9.6" ] ],
     [ "servo1:V+", "esp:5V", "red", [ "h28.8", "v57.5" ] ],
-    [ "servo1:PWM", "esp:14", "green", [ "h0" ] ]
+    [ "servo1:PWM", "esp:14", "green", [ "h0" ] ],
+    [ "sd1:GND", "esp:GND.1", "black", [ "h48", "v105.71", "h9.6" ] ],
+    [ "sd1:VCC", "esp:5V", "red", [ "h9.6", "v134.54" ] ],
+    [ "sd1:DI", "esp:35", "#8f4814", [ "h0" ] ],
+    [ "sd1:CS", "esp:32", "green", [ "h0" ] ],
+    [ "sd1:SCK", "esp:34", "gold", [ "h38.4", "v9.59" ] ],
+    [ "sd1:DO", "esp:33", "purple", [ "h28.8", "v57.71" ] ]
   ],
   "dependencies": {}
 }

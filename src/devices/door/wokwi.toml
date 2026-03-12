@@ -1,4 +1,5 @@
 [wokwi]
 version = 1
-firmware = 'build/wokwi.ino.bin'
-elf = 'build/wokwi.ino.elf'
+firmware = 'build/door.ino.bin'
+elf = 'build/door.ino.elf'
+partitions = 'partitions.csv'
