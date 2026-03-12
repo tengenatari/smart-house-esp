@@ -79,40 +79,65 @@ void connect_to_wifi() {
 }
 StaticJsonDocument<200> checkMulti(String uid, StaticJsonDocument<200> doc) {
   JsonArray authorizedCards;
-  if (doc["metadata"].is<JsonObject>() && doc["metadata"]["authorized_cards"].is<JsonArray>()) {
-    authorizedCards = doc["metadata"]["authorized_cards"].as<JsonArray>();
+  if (doc["metadata"].is<JsonObject>() && doc["metadata"]["auth"].is<JsonArray>()) {
+    authorizedCards = doc["metadata"]["auth"].as<JsonArray>();
   }
 
   StaticJsonDocument<200> res;
   res["token"] = TOKEN;
 
-  // StaticJsonDocument<100> values;
-  // values["state"] = STATE;
-  // res["values"] = values;
+  StaticJsonDocument<100> values;
+  values["state"] = STATE;
+  res["values"] = values;
   JsonObject metadata = res.createNestedObject("metadata");
-  JsonArray newCards = metadata.createNestedArray("authorized_cards");
+  JsonArray newAuth = metadata.createNestedArray("auth");
+  /*
+  {
+  "auth": [
+    {
+      "card": "11:22:33:44",
+      "room_number": 1,
+      "name": "Arteev"
+    }
+  ]
+  } 
+  */
+
 
   bool found = false;
-  for (JsonVariant card : authorizedCards) {
-    if (card.is<String>() && card.as<String>() == uid) {
+  for (JsonVariant auth : authorizedCards) {
+    if (auth.is<JsonObject>() && auth["card"].as<String>() == uid) {
       found = true;
       break;
     }
   }
 
-  for (JsonVariant card : authorizedCards) {
-    if (card.is<String>()) {
-      String cardUid = card.as<String>();
+  for (JsonVariant auth : authorizedCards) {
+    if (auth.is<JsonObject>()) {
+      String cardUid = auth["card"].as<String>();
       if (!found || cardUid != uid) {  
-        newCards.add(cardUid);
+        StaticJsonDocument<100> newCard;
+        newCard["card"] = cardUid;
+        newCard["name"] = "";
+        newCard["room_number"] = "";
+
+        newAuth.add(newCard);
       }
     }
   }
 
-  if (!found)
-    newCards.add(uid);
+  if (!found){
+    StaticJsonDocument<100> newCard;
+    newCard["card"] = uid;
+    newCard["name"] = "";
+    newCard["room_number"] = "";
+    newAuth.add(newCard);
+  }
+  
   return res;
 }
+
+
 int checkServerAccess(String uid) {
   if (WiFi.status() != WL_CONNECTED) 
   {
@@ -162,7 +187,7 @@ int checkServerAccess(String uid) {
 
   Serial.println(payload);
   http.end();
-  if (!doc["metadata"].containsKey("authorized_cards") || !doc["metadata"]["authorized_cards"].is<JsonArray>()) {
+  if (!doc["metadata"].containsKey("auth") || !doc["metadata"]["auth"].is<JsonArray>()) {
     Serial.println("help");
     return -1;
   }

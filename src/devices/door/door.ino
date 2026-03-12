@@ -28,8 +28,8 @@
 #define SERVER_TIMEOUT 10000
 
 // File paths on SD card
-#define AUTH_FILE "/authorized_cards.txt"
-#define LOG_FILE "/log.txt"
+#define AUTH_FILE "authorized_cards.txt"
+#define LOG_FILE "log.txt"
 
 // Door state
 int STATE = 0;
@@ -86,6 +86,7 @@ void logPrintf(const char* format, ...) {
 }
 
 bool initSD() {
+
   if (!SD.begin(CS_PIN)) {
     Serial.println("ERROR: SD card initialization failed! Check wiring.");
     return false;
@@ -128,7 +129,7 @@ bool loadAuthorizedCards() {
 }
 
 bool saveAuthorizedCards() {
-  File file = SD.open(AUTH_FILE, FILE_WRITE);
+  File file = SD.open(AUTH_FILE, FILE_APPEND);
   if (!file) {
     logPrintln("ERROR: Failed to open " AUTH_FILE " for writing");
     return false;
@@ -170,7 +171,7 @@ bool addUidToLocalList(String uid) {
 }
 
 void rfid_setup() {
-  SPI.begin();
+  // SPI.begin();
   rfid.PCD_Init();
   logPrintln("RFID reader ready");
 }
@@ -193,8 +194,9 @@ String rfid_read() {
   }
 
   String uid = formatUID(rfid.uid.uidByte, rfid.uid.size);
-  logPrint("Detected UID: ");
-  logPrintln(uid);
+  Serial.println(uid);
+  // logPrint("Detected UID: ");
+  // logPrintln(uid);
 
   rfid.PICC_HaltA();
   return uid;
@@ -224,11 +226,13 @@ void connect_to_wifi() {
   delay(1000);
 }
 
-bool checkMulti(String uid, StaticJsonDocument<200> doc) {
-  JsonArray authorizedCards = doc["metadata"]["authorized_cards"].as<JsonArray>();
 
-  for (JsonVariant card : authorizedCards) {
-    if (card.is<String>() && card.as<String>() == uid) {
+bool checkMulti(String uid, StaticJsonDocument<200> doc) {
+  JsonArray authorizedCards = doc["metadata"]["auth"].as<JsonArray>();
+
+  for (JsonVariant auth : authorizedCards) {
+    // Serial.println(auth["card"].as<String>)
+    if (auth.is<JsonObject>() && auth["card"].as<String>() == uid) {
       return true; 
     }
   }
@@ -267,11 +271,11 @@ int checkServerAccess(String uid) {
   
   StaticJsonDocument<200> doc;
   DeserializationError error = deserializeJson(doc, payload);
-
+  Serial.println("here");
   logPrintln(payload);
   
   http.end();
-  if (!doc["metadata"].containsKey("authorized_cards") || !doc["metadata"]["authorized_cards"].is<JsonArray>()) {
+  if (!doc["metadata"].containsKey("auth") || !doc["metadata"]["auth"].is<JsonArray>()) {
     logPrintln("ERROR: Invalid server response format");
     return -1;
   }
@@ -323,10 +327,16 @@ void addBlueCard() {
 void setup() {
   Serial.begin(115200);
   delay(1000);
-  
+  // SPI.begin(18,19,23,5);
+  // pinMode(CS_PIN, OUTPUT);
+  // pinMode(SS_PIN, OUTPUT);
+  // SPI.begin(34, 33, 35);
+  SPI.begin();
+  digitalWrite(CS_PIN, LOW);
+  digitalWrite(SS_PIN, HIGH);
+  initSD();
   logPrintln("\nstarting...");
   
-  initSD();
   
   loadAuthorizedCards();
   
@@ -335,15 +345,29 @@ void setup() {
   door_servo.attach(SERVO_PIN);
   closeDoor(); // Start with door closed
   
+  // digitalWrite(CS_PIN, HIGH);
+  // digitalWrite(SS_PIN, LOW);
   rfid_setup();
   // addBlueCard();
+
+  // digitalWrite(CS_PIN, LOW);
+  // digitalWrite(SS_PIN, HIGH);
   
   logPrintln("System ready - Waiting for cards...");
+  delay(1000);
 }
 
 void loop() {
   delay(10);
+
+  // digitalWrite(CS_PIN, HIGH);
+  // digitalWrite(SS_PIN, LOW);
   String uid = rfid_read();
+  
+
+  // digitalWrite(CS_PIN, LOW);
+  // digitalWrite(SS_PIN, HIGH);
+
   int authResult = checkServerAccess(uid);
   
   if (authResult == 2 | uid.length() == 0) return; 
