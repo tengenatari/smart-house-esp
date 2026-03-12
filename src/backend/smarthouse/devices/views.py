@@ -57,7 +57,7 @@ def heartbeat(request, name):
     metadata = request.data.get("metadata")
 
     if metadata is not None:
-        device.metadata = metadata
+        device.metafield = metadata
         device.save()
 
 
