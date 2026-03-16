@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "author": "Артём Артеев",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -19.2, "left": -292.76, "attrs": {} },
+    { "type": "board-mfrc522", "id": "rfid1", "top": 6.95, "left": -111.76, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "rfid1:GND", "esp:GND.2", "black", [ "h-48", "v-86.4" ] ],
+    [ "rfid1:RST", "esp:21", "purple", [ "h-67.2", "v-48" ] ],
+    [ "rfid1:SDA", "esp:5", "green", [ "h-48", "v48" ] ],
+    [ "rfid1:SCK", "esp:18", "orange", [ "h-28.8", "v28.8" ] ],
+    [ "rfid1:MISO", "esp:19", "blue", [ "h0" ] ],
+    [ "esp:23", "rfid1:MOSI", "yellow", [ "h28.8", "v48" ] ]
+  ],
+  "dependencies": {}
+}
